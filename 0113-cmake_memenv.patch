@@ -1,0 +1,75 @@
+Description: install "memenv" component
+ This patch will install two additional files to libleveldb-dev:
+  + include/helpers/memenv.h
+  + lib/*/libmemenv.a
+Forwarded: no
+Author: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Last-Update: 2021-07-17
+
+---
+
+--- leveldb/CMakeLists.txt
++++ leveldb/CMakeLists.txt
+@@ -230,12 +230,30 @@ target_sources(leveldb
+     "helpers/memenv/memenv.h"
+ )
+ 
++if(NOT BUILD_SHARED_LIBS)
++# Build static MemEnv library.
++add_library(memenv "")
++target_sources(memenv
++  PRIVATE
++    "${PROJECT_SOURCE_DIR}/helpers/memenv/memenv.cc"
++    "${PROJECT_SOURCE_DIR}/helpers/memenv/memenv.h"
++)
++endif(NOT BUILD_SHARED_LIBS)
++
+ target_include_directories(leveldb
+   PUBLIC
+     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
+ 
++if(NOT BUILD_SHARED_LIBS)
++target_include_directories(memenv
++  PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
++endif(NOT BUILD_SHARED_LIBS)
++
+ set_target_properties(leveldb
+   PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR}d)
+ 
+@@ -253,6 +271,16 @@ if (NOT HAVE_CXX17_HAS_INCLUDE)
+   )
+ endif(NOT HAVE_CXX17_HAS_INCLUDE)
+ 
++if(NOT BUILD_SHARED_LIBS)
++target_compile_definitions(memenv
++  PRIVATE
++    # Used by include/export.h when building shared libraries.
++    LEVELDB_COMPILE_LIBRARY
++    # Used by port/port.h.
++    ${LEVELDB_PLATFORM_NAME}=1
++)
++endif(NOT BUILD_SHARED_LIBS)
++
+ if(BUILD_SHARED_LIBS)
+   target_compile_definitions(leveldb
+     PUBLIC
+@@ -492,4 +520,14 @@ if(LEVELDB_INSTALL)
+       "${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+   )
++if(NOT BUILD_SHARED_LIBS)
++  install(
++    FILES
++      "${PROJECT_SOURCE_DIR}/helpers/memenv/memenv.h"
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/helpers
++  )
++  install(TARGETS memenv
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  )
++endif(NOT BUILD_SHARED_LIBS)
+ endif(LEVELDB_INSTALL)

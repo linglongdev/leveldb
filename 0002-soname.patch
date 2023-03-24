@@ -1,0 +1,19 @@
+Description: keep the bumped SONAME
+ Keep the bumped 1d SONAME for now.
+Author: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Bug-Debian: https://bugs.debian.org/877773
+Last-Update: 2019-07-22
+
+---
+
+--- leveldb-1.22.orig/CMakeLists.txt
++++ leveldb-1.22/CMakeLists.txt
+@@ -215,7 +215,7 @@ target_include_directories(leveldb
+ )
+ 
+ set_target_properties(leveldb
+-  PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
++  PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR}d)
+ 
+ target_compile_definitions(leveldb
+   PRIVATE

@@ -1,0 +1,27 @@
+package:
+  id: leveldb
+  version: 1.20
+  kind: lib
+
+base:
+  id: org.deepin.base
+  version: 20.5.0
+
+source:
+  kind: archive
+  url: https://github.com/deepin-community/leveldb.git
+
+  commit: 322a1d2f4046f8c1e34404fb9168236269142310
+  patch:
+  - 0002-soname.patch
+  - 0113-cmake_memenv.patch
+  - 0120-external_testing.patch
+  - 1001-fix_bloom_test.patch
+  - re-enable-rtti.patch
+build:
+  kind: manual
+  manual:
+    configure: |
+      #exec bash
+      make -j6
+      make -j install

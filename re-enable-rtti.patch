@@ -1,0 +1,21 @@
+Description: Enable rtti
+ We need RTTI support because of Ceph
+Author: Thomas Goirand <zigo@debian.org>
+Forwarded: no
+Last-Update: 2021-10-27
+
+--- leveldb-1.23.orig/CMakeLists.txt
++++ leveldb-1.23/CMakeLists.txt
+@@ -71,9 +71,9 @@ else(CMAKE_CXX_COMPILER_ID STREQUAL "MSV
+   string(REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+ 
+-  # Disable RTTI.
+-  string(REGEX REPLACE "-frtti" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
++  # We need RTTI support if code that uses leveldb uses typeid (e.g. ceph).
++#  string(REGEX REPLACE "-frtti" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
++#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+ endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+ 
+ # Test whether -Wthread-safety is available. See

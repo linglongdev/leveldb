@@ -1,0 +1,5 @@
+0002-soname.patch
+0113-cmake_memenv.patch
+0120-external_testing.patch
+1001-fix_bloom_test.patch
+re-enable-rtti.patch

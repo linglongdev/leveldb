@@ -1,0 +1,36 @@
+Description: use packaged tools for self-testing
+ Tools gtest and benchmark are packaged, use those instead of embedded ones.
+Author: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Forwarded: not-needed
+Last-Update: 2021-07-18
+
+---
+
+--- leveldb-1.23.orig/CMakeLists.txt
++++ leveldb-1.23/CMakeLists.txt
+@@ -324,19 +324,19 @@ if(LEVELDB_BUILD_TESTS)
+   set(build_gmock ON)
+ 
+   # This project is tested using GoogleTest.
+-  add_subdirectory("third_party/googletest")
++  #add_subdirectory("third_party/googletest")
+ 
+   # This project uses Google benchmark for benchmarking.
+   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+   set(BENCHMARK_ENABLE_EXCEPTIONS OFF CACHE BOOL "" FORCE)
+-  add_subdirectory("third_party/benchmark")
++  #add_subdirectory("third_party/benchmark")
+ 
+   # GoogleTest triggers a missing field initializers warning.
+   if(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
+-    set_property(TARGET gtest
+-        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
+-    set_property(TARGET gmock
+-        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
++	  #    set_property(TARGET gtest
++	  #        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
++	  #    set_property(TARGET gmock
++	  #        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
+   endif(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
+ 
+   function(leveldb_test test_file)
