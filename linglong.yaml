@@ -8,7 +8,7 @@ base:
   version: 20.5.0
 
 source:
-  kind: archive
+  kind: git
   url: https://github.com/deepin-community/leveldb.git
 
   commit: 322a1d2f4046f8c1e34404fb9168236269142310
